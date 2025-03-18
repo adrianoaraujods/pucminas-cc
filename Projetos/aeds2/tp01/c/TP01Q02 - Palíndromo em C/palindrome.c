@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define MAX_LENGTH 255
+#define MAX_LENGTH 512
 
 void readln(char string[]) {
   fgets(string, MAX_LENGTH, stdin);

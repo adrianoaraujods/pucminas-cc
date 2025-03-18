@@ -6,11 +6,15 @@
 
 # Projetos
 !/Projetos/**/*
+*.res.out
+*.temp
 
 # Java
 /Projetos/**/.idea/**/*
+/Projetos/**/out/**/*
 *.class
 
 # C/C++/
 /Projetos/**/cmake-build-debug/**/*
 CMakeLists.txt
+*.exe

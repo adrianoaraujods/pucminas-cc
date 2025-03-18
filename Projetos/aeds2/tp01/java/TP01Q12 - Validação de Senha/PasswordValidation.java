@@ -6,11 +6,10 @@ public class PasswordValidation {
     static Scanner scanner = new Scanner(System.in, StandardCharsets.ISO_8859_1);
 
     public static void main(String[] args) {
-        System.setOut(new PrintStream(System.out, true, StandardCharsets.ISO_8859_1));
         String line;
 
         while (!isEOF(line = scanner.nextLine())) {
-            System.out.println(validation(line) ? "SIM" : "NÃO");
+            System.out.println(validation(line) ? "SIM" : "NAO");
         }
     }
 
