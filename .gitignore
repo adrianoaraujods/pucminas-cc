@@ -1,7 +1,16 @@
 *
 !*/
+!*.*
 
 !.gitignore
 
 # Projetos
 !/Projetos/**/*
+
+# Java
+/Projetos/**/.idea/**/*
+*.class
+
+# C/C++/
+/Projetos/**/cmake-build-debug/**/*
+CMakeLists.txt
