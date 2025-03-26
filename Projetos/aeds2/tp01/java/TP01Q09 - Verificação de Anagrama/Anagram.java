@@ -64,21 +64,25 @@ public class Anagram {
         char[] chars1 = toCharArray(word1);
         char[] chars2 = toCharArray(word2);
 
-        for (int i = 0; i < chars2.length; i++) {
-            boolean match = false;
+        if (chars1.length != chars2.length) {
+            anagram = false;
+        } else {
+            for (int i = 0; i < chars2.length; i++) {
+                boolean match = false;
 
-            for (int j = 0; j < chars1.length; j++) {
-                if (chars2[i] == chars1[j]) {
-                    match = true;
-                    chars1[j] = ' ';
+                for (int j = 0; j < chars1.length; j++) {
+                    if (chars2[i] == chars1[j]) {
+                        match = true;
+                        chars1[j] = ' ';
 
-                    j = chars1.length;
+                        j = chars1.length;
+                    }
                 }
-            }
 
-            if (!match) {
-                anagram = false;
-                i = chars1.length;
+                if (!match) {
+                    anagram = false;
+                    i = chars1.length;
+                }
             }
         }
 

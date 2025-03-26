@@ -81,7 +81,7 @@ public class PageReader {
 
         for (int i = 0; i < html.length(); i++) {
             if (html.charAt(i) == '<') {
-                for (int t = 0; t < tags.length; t++, i++) {
+                for (int t = 0; t < tags.length; t++) {
                     if (html.length() - i - tags[t].length() > 1) {
                         boolean match = true;
 
@@ -99,7 +99,7 @@ public class PageReader {
                 consonantsCount++;
             } else {
                 for (int v = 0; v < vowels.length; v++) {
-                    if (Character.toLowerCase(html.charAt(i)) == vowels[v]) {
+                    if (html.charAt(i) == vowels[v]) {
                         vowelsCount[v]++;
                         v = vowels.length;
                     }
@@ -138,10 +138,10 @@ public class PageReader {
         ) {
             isConsonant = false;
         } else {
-            for (int j = 0; j < vowels.length; j++) {
-                if (character == vowels[j]) {
+            for (int i = 0; i < vowels.length; i++) {
+                if (Character.toLowerCase(character) == vowels[i]) {
                     isConsonant = false;
-                    j = vowels.length;
+                    i = vowels.length;
                 }
             }
         };

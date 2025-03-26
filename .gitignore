@@ -7,5 +7,16 @@
 !/Projetos/aeds2/**/*
 
 # Arquivos
+*.res.out
+*.temp
+
+# Java
 /**/.idea/**/*
+/**/out/**/*
+*.class
+
+# C/C++/
+/**/cmake-build-debug/**/*
+CMakeLists.txt
+*.exe
 *.class
