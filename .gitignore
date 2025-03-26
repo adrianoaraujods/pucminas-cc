@@ -4,4 +4,8 @@
 !.gitignore
 
 # Projetos
-!/Projetos/**/*
+!/Projetos/aeds2/**/*
+
+# Arquivos
+/**/.idea/**/*
+*.class
