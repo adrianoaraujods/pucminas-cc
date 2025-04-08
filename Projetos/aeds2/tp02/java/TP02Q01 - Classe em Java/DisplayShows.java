@@ -1,10 +1,71 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.Scanner;
 
-public class Show {
+class File {
+  static String path = "disneyplus.csv";
+
+  public static String readLine(int index) {
+    String line = null;
+
+    if (index > 0) {
+      try {
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+
+        int i = 0;
+        while (((line = reader.readLine()) != null) && i < index) i++;
+      } catch (IOException _) {
+        // file doesn't exist
+      }
+    }
+
+    return line;
+  }
+
+  public static ArrayList<String> readAllLines() {
+    ArrayList<String> lines = null;
+
+    try {
+      lines = new ArrayList<>(Files.readAllLines(Paths.get(path)));
+    } catch (IOException _) {
+      // file doesn't exist
+    }
+
+    return lines;
+  }
+
+  public static ArrayList<String> readUntil(int index) {
+    ArrayList<String> lines = new ArrayList<>();
+
+    if (index > 0) {
+      try {
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        String line;
+
+        int i = 0;
+        while (((line = reader.readLine()) != null) && i < index) {
+          lines.add(line);
+
+          i++;
+        }
+      } catch (IOException _) {
+        // file doesn't exist
+      }
+    }
+
+    return lines;
+  }
+}
+
+class Show {
   String show_id;
   String type;
   String title;
@@ -274,5 +335,21 @@ public class Show {
     show.setListedIn(input.substring(startIndex, endIndex).split(", "));
 
     return show;
+  }
+}
+
+public class DisplayShows {
+  static Scanner scanner = new Scanner(System.in);
+
+  public static void main(String[] args) {
+    String line;
+
+    while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
+      Show show;
+      int index = Integer.parseInt(line.substring(0, line.indexOf(',', 1)));
+
+      show = Show.read(File.readLine(index));
+      show.print();
+    }
   }
 }
