@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 class File {
-  static String path = "disneyplus.csv";
+  static String path = "/tmp/disneyplus.csv";
 
   public static String readLine(int index) {
     String line = null;
@@ -22,7 +22,7 @@ class File {
 
         int i = 0;
         while (((line = reader.readLine()) != null) && i < index) i++;
-      } catch (IOException _) {
+      } catch (IOException e) {
         // file doesn't exist
       }
     }
@@ -35,7 +35,7 @@ class File {
 
     try {
       lines = new ArrayList<>(Files.readAllLines(Paths.get(path)));
-    } catch (IOException _) {
+    } catch (IOException e) {
       // file doesn't exist
     }
 
@@ -56,7 +56,7 @@ class File {
 
           i++;
         }
-      } catch (IOException _) {
+      } catch (IOException e) {
         // file doesn't exist
       }
     }
@@ -105,9 +105,13 @@ class Show {
   }
 
   public void setCast(String[] cast) {
-    this.cast = new ArrayList<String>(cast.length);
-
-    this.cast.addAll(Arrays.asList(cast));
+    if (cast != null && cast.length > 0 && !cast[0].isEmpty()) {
+      this.cast = new ArrayList<>(cast.length);
+      this.cast.addAll(Arrays.asList(cast));
+      this.cast.sort(String::compareTo);
+    } else {
+      this.cast = new ArrayList<>(0);
+    }
   }
 
   public void setCast(ArrayList<String> cast) {
@@ -135,9 +139,12 @@ class Show {
   }
 
   public void setListedIn(String[] listed_in) {
-    this.listed_in = new ArrayList<String>(listed_in.length);
-
-    this.listed_in.addAll(Arrays.asList(listed_in));
+    if (listed_in != null && listed_in.length > 0 && !listed_in[0].isEmpty()) {
+      this.listed_in = new ArrayList<>(listed_in.length);
+      this.listed_in.addAll(Arrays.asList(listed_in));
+    } else {
+      this.listed_in = new ArrayList<>(0);
+    }
   }
 
   public void setListedIn(ArrayList<String> listed_in) {
@@ -158,7 +165,7 @@ class Show {
   }
 
   public Optional<String> getDirector() {
-    return Optional.ofNullable(director);
+    return director != null && !director.isEmpty() ? Optional.of(director) : Optional.empty();
   }
 
   public ArrayList<String> getCast() {
@@ -166,7 +173,7 @@ class Show {
   }
 
   public Optional<String> getCountry() {
-    return Optional.ofNullable(country);
+    return country != null && !country.isEmpty() ? Optional.of(country) : Optional.empty();
   }
 
   public Optional<LocalDate> getDateAdded() {
@@ -214,16 +221,17 @@ class Show {
 
   public String toStr() {
     return ("=> " + getId() +
-            " ## " + getType() +
             " ## " + getTitle() +
+            " ## " + getType() +
             " ## " + getDirector().orElse("NaN") +
-            " ## [" + String.join(", ", getCast()) + "]" +
+            " ## [" + (getCast().isEmpty() ? "NaN" : String.join(", ", getCast())) + "]" +
             " ## " + getCountry().orElse("NaN") +
             " ## " + getDateAddedFormatted().orElse("NaN") +
             " ## " + getReleaseYear() +
             " ## " + getRating().orElse("NaN") +
             " ## " + getDuration() +
-            " ## [" + String.join(", ", getListedIn()) + "]\n"
+            " ## [" + (getListedIn().isEmpty() ? "NaN" : String.join(", ", getListedIn())) + "]" +
+            " ##"
     );
   }
 
@@ -242,22 +250,18 @@ class Show {
     startIndex = endIndex + 1;
 
     /* Type */
-    if (input.charAt(startIndex) == '"') {
-      startIndex++;
-      endIndex = input.indexOf('"', startIndex);
-      show.setType(input.substring(startIndex, endIndex));
-      startIndex = endIndex + 2;
-    } else {
-      endIndex = input.indexOf(",", startIndex);
-      show.setType(input.substring(startIndex, endIndex));
-      startIndex = endIndex + 1;
-    }
+    endIndex = input.indexOf(",", startIndex);
+    show.setType(input.substring(startIndex, endIndex));
+    startIndex = endIndex + 1;
 
     /* Title */
     if (input.charAt(startIndex) == '"') {
       startIndex++;
-      endIndex = input.indexOf('"', startIndex);
-      show.setTitle(input.substring(startIndex, endIndex));
+      endIndex = input.indexOf("\",", startIndex);
+
+      show.setTitle(
+              input.substring(startIndex, endIndex).replace("\"", "")
+      );
       startIndex = endIndex + 2;
     } else {
       endIndex = input.indexOf(",", startIndex);
@@ -268,8 +272,11 @@ class Show {
     /* Director */
     if (input.charAt(startIndex) == '"') {
       startIndex++;
-      endIndex = input.indexOf('"', startIndex);
-      show.setDirector(input.substring(startIndex, endIndex));
+      endIndex = input.indexOf("\",", startIndex);
+
+      show.setDirector(
+              input.substring(startIndex, endIndex).replace("\"", "")
+      );
       startIndex = endIndex + 2;
     } else {
       endIndex = input.indexOf(",", startIndex);
@@ -280,19 +287,25 @@ class Show {
     /* Cast */
     if (input.charAt(startIndex) == '"') {
       startIndex++;
-      endIndex = input.indexOf('"', startIndex);
-      show.setCast(input.substring(startIndex, endIndex).split(", "));
+      endIndex = input.indexOf("\",", startIndex);
+
+      show.setCast(
+              input.substring(startIndex, endIndex).replace("\"", "").split(", ")
+      );
       startIndex = endIndex + 2;
     } else {
       endIndex = input.indexOf(",", startIndex);
-      show.setCast(input.substring(startIndex, endIndex).split(", "));
+      show.setCast(
+              input.substring(startIndex, endIndex).replace("\"", "").split(", ")
+      );
       startIndex = endIndex + 1;
     }
 
     /* Country */
     if (input.charAt(startIndex) == '"') {
       startIndex++;
-      endIndex = input.indexOf('"', startIndex);
+      endIndex = input.indexOf("\",", startIndex);
+
       show.setCountry(input.substring(startIndex, endIndex));
       startIndex = endIndex + 2;
     } else {
@@ -303,7 +316,8 @@ class Show {
 
     /* Date Added */
     startIndex++;
-    endIndex = input.indexOf('"', startIndex);
+    endIndex = input.indexOf("\",", startIndex);
+
     show.setDateAdded(LocalDate.parse(
             input.substring(startIndex, endIndex),
             formatter
@@ -328,7 +342,7 @@ class Show {
     /* Listed In */
     if (input.charAt(startIndex) == '"') {
       startIndex++;
-      endIndex = input.indexOf('"', startIndex);
+      endIndex = input.indexOf("\",", startIndex);
     } else {
       endIndex = input.indexOf(",", startIndex);
     }
@@ -346,7 +360,8 @@ public class DisplayShows {
 
     while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
       Show show;
-      int index = Integer.parseInt(line.substring(0, line.indexOf(',', 1)));
+
+      int index = Integer.parseInt(line.substring(1));
 
       show = Show.read(File.readLine(index));
       show.print();
