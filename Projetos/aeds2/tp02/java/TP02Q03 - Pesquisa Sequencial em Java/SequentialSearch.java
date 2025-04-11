@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -352,6 +353,7 @@ class Show {
 public class SequentialSearch {
   static Scanner scanner = new Scanner(System.in);
   static List<Show> shows = new ArrayList<>(300);
+  static int comparisons = 0;
 
   static boolean search(String title) {
     boolean found = false;
@@ -359,6 +361,7 @@ public class SequentialSearch {
     int i = 0;
     while (i < shows.size() && !found) {
       if (shows.get(i).getTitle().equals(title)) found = true;
+      comparisons++;
 
       i++;
     }
@@ -367,6 +370,7 @@ public class SequentialSearch {
   }
 
   public static void main(String[] args) {
+    long start = System.currentTimeMillis();
     String line;
 
     while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
@@ -376,6 +380,14 @@ public class SequentialSearch {
 
     while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
       System.out.println(search(line) ? "SIM" : "NAO");
+    }
+
+    long end = System.currentTimeMillis();
+
+    try (FileWriter writer = new FileWriter("matrícula_sequencial.txt")) {
+      writer.write("874138" + '\t' + (end - start) + '\t' + comparisons);
+    } catch (IOException e) {
+      //
     }
   }
 }

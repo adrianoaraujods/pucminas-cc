@@ -221,8 +221,8 @@ class Show {
 
   public String toStr() {
     return ("=> " + getId() +
-            " ## " + getTitle() +
             " ## " + getType() +
+            " ## " + getTitle() +
             " ## " + getDirector().orElse("NaN") +
             " ## [" + (getCast().isEmpty() ? "NaN" : String.join(", ", getCast())) + "]" +
             " ## " + getCountry().orElse("NaN") +
