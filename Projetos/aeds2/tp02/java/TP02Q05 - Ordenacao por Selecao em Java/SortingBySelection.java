@@ -19,7 +19,6 @@ class File {
         if (index > 0) {
             try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
                 int i = 0;
-
                 while (((line = reader.readLine()) != null) && i < index) {
                     i++;
                 }
@@ -353,26 +352,31 @@ class Show {
     }
 }
 
-public class SequentialSearch {
+public class SortingBySelection {
 
     static Scanner scanner = new Scanner(System.in);
-    static List<Show> shows = new ArrayList<>(300);
+    static Show[] shows = new Show[512];
+    static int n = 0;
     static int comparisons = 0;
 
-    static boolean search(String title) {
-        boolean found = false;
+    static void swap(int indexFirst, int indexSecond) {
+        Show temp = shows[indexFirst];
+        shows[indexFirst] = shows[indexSecond];
+        shows[indexSecond] = temp;
+    }
 
-        int i = 0;
-        while (i < shows.size() && !found) {
-            if (shows.get(i).getTitle().equals(title)) {
-                found = true;
+    static void sort() {
+        for (int i = 0; i < (n - 1); i++) {
+            int smallest = i;
+
+            for (int j = (i + 1); j < n; j++) {
+                comparisons++;
+                if (shows[smallest].title.compareToIgnoreCase(shows[j].title) > 0) {
+                    smallest = j;
+                }
             }
-            comparisons++;
-
-            i++;
+            swap(smallest, i);
         }
-
-        return found;
     }
 
     public static void main(String[] args) {
@@ -381,16 +385,19 @@ public class SequentialSearch {
 
         while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
             int index = Integer.parseInt(line.substring(1));
-            shows.add(Show.read(File.readLine(index)));
+            shows[n] = Show.read(File.readLine(index));
+            n++;
         }
 
-        while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
-            System.out.println(search(line) ? "SIM" : "NAO");
+        sort();
+
+        for (int i = 0; i < n; i++) {
+            shows[i].print();
         }
 
         long end = System.currentTimeMillis();
 
-        try (FileWriter writer = new FileWriter("matricula_sequencial.txt")) {
+        try (FileWriter writer = new FileWriter("matricula_selecao.txt")) {
             writer.write("123456" + '\t' + (end - start) + '\t' + comparisons);
         } catch (IOException e) {
             //

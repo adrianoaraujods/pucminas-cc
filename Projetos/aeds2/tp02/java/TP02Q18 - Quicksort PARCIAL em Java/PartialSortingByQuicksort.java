@@ -7,7 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Scanner;
 
 class File {
 
@@ -353,26 +356,57 @@ class Show {
     }
 }
 
-public class SequentialSearch {
+public class PartialSortingByQuicksort {
 
     static Scanner scanner = new Scanner(System.in);
-    static List<Show> shows = new ArrayList<>(300);
+    static Show[] shows = new Show[512];
+    static int n = 0;
     static int comparisons = 0;
+    static int k = 10;
 
-    static boolean search(String title) {
-        boolean found = false;
+    static void swap(int indexFirst, int indexSecond) {
+        Show temp = shows[indexFirst];
+        shows[indexFirst] = shows[indexSecond];
+        shows[indexSecond] = temp;
+    }
 
-        int i = 0;
-        while (i < shows.size() && !found) {
-            if (shows.get(i).getTitle().equals(title)) {
-                found = true;
-            }
-            comparisons++;
-
-            i++;
+    static void sort(int k) {
+        if (k < 0) {
+            return;
+        }
+        if (k >= shows.length) {
+            k = n;
         }
 
-        return found;
+        quicksort(0, n - 1, k);
+    }
+
+    static void quicksort(int left, int right, int k) {
+        int i = left, j = right;
+        String pivot = shows[(right + left) / 2].date_added.toString() + shows[(right + left) / 2].getTitle();
+
+        while (i <= j) {
+            while ((shows[i].date_added.toString() + shows[i].getTitle()).compareToIgnoreCase(pivot) < 0) {
+                comparisons++;
+                i++;
+            }
+            while ((shows[j].date_added.toString() + shows[j].getTitle()).compareToIgnoreCase(pivot) > 0) {
+                comparisons++;
+                j--;
+            }
+            if (i <= j) {
+                swap(i, j);
+                i++;
+                j--;
+            }
+        }
+
+        if (left < j && k > left) {
+            quicksort(left, j, k);
+        }
+        if (i < right && k > i) {
+            quicksort(i, right, k);
+        }
     }
 
     public static void main(String[] args) {
@@ -381,16 +415,19 @@ public class SequentialSearch {
 
         while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
             int index = Integer.parseInt(line.substring(1));
-            shows.add(Show.read(File.readLine(index)));
+            shows[n] = Show.read(File.readLine(index));
+            n++;
         }
 
-        while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
-            System.out.println(search(line) ? "SIM" : "NAO");
+        sort(k);
+
+        for (int i = 0; i < k; i++) {
+            shows[i].print();
         }
 
         long end = System.currentTimeMillis();
 
-        try (FileWriter writer = new FileWriter("matricula_sequencial.txt")) {
+        try (FileWriter writer = new FileWriter("matricula_quicksort.txt")) {
             writer.write("123456" + '\t' + (end - start) + '\t' + comparisons);
         } catch (IOException e) {
             //

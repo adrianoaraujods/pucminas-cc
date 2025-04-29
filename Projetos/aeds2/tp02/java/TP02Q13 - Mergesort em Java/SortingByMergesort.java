@@ -7,7 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Scanner;
 
 class File {
 
@@ -82,7 +85,7 @@ class Show {
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
 
     /* Constructors */
-    private Show() {
+    public Show() {
     }
 
     public Show(String input) {
@@ -353,26 +356,76 @@ class Show {
     }
 }
 
-public class SequentialSearch {
+public class SortingByMergesort {
 
     static Scanner scanner = new Scanner(System.in);
-    static List<Show> shows = new ArrayList<>(300);
+    static Show[] shows = new Show[512];
+    static int n = 0;
     static int comparisons = 0;
 
-    static boolean search(String title) {
-        boolean found = false;
+    static void sort() {
+        mergesort(0, n - 1);
+    }
 
-        int i = 0;
-        while (i < shows.size() && !found) {
-            if (shows.get(i).getTitle().equals(title)) {
-                found = true;
-            }
-            comparisons++;
+    static void mergesort(int left, int right) {
+        if (left < right) {
+            int half = (left + right) / 2;
+            mergesort(left, half);
+            mergesort(half + 1, right);
+            interpolate(left, half, right);
+        }
+    }
 
-            i++;
+    static void interpolate(int left, int half, int right) {
+        int n1 = half - left + 1;
+        int n2 = right - half;
+
+        Show[] a1 = new Show[n1];
+        Show[] a2 = new Show[n2];
+
+        for (int i = 0; i < n1; i++) {
+            a1[i] = shows[left + i];
         }
 
-        return found;
+        for (int j = 0; j < n2; j++) {
+            a2[j] = shows[half + 1 + j];
+        }
+
+        int i = 0, j = 0, k = left;
+
+        while (i < n1 && j < n2) {
+            comparisons++;
+
+            if ((a1[i].getDuration()).compareTo(a2[j].getDuration()) <= 0) {
+                shows[k++] = a1[i++];
+            } else {
+                shows[k++] = a2[j++];
+            }
+        }
+
+        while (i < n1) {
+            shows[k++] = a1[i++];
+        }
+
+        while (j < n2) {
+            shows[k++] = a2[j++];
+        }
+    }
+
+    static void untie() {
+        for (int i = 1; i < n; i++) {
+            Show temp = shows[i];
+            int j = i - 1;
+
+            while ((j >= 0)
+                    && (shows[j].getDuration().equals(temp.getDuration()) && (shows[j].getTitle()).compareToIgnoreCase(temp.getTitle()
+            ) > 0)) {
+                comparisons++;
+                shows[j + 1] = shows[j];
+                j--;
+            }
+            shows[j + 1] = temp;
+        }
     }
 
     public static void main(String[] args) {
@@ -381,16 +434,20 @@ public class SequentialSearch {
 
         while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
             int index = Integer.parseInt(line.substring(1));
-            shows.add(Show.read(File.readLine(index)));
+            shows[n] = Show.read(File.readLine(index));
+            n++;
         }
 
-        while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
-            System.out.println(search(line) ? "SIM" : "NAO");
+        sort();
+        untie();
+
+        for (int i = 0; i < n; i++) {
+            shows[i].print();
         }
 
         long end = System.currentTimeMillis();
 
-        try (FileWriter writer = new FileWriter("matricula_sequencial.txt")) {
+        try (FileWriter writer = new FileWriter("matricula_mergesort.txt")) {
             writer.write("123456" + '\t' + (end - start) + '\t' + comparisons);
         } catch (IOException e) {
             //

@@ -7,7 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Scanner;
 
 class File {
 
@@ -47,7 +50,7 @@ class File {
         ArrayList<String> lines = new ArrayList<>();
 
         if (index > 0) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(path));) {
                 String line;
 
                 int i = 0;
@@ -353,26 +356,39 @@ class Show {
     }
 }
 
-public class SequentialSearch {
+public class PartialSortingBySelection {
 
     static Scanner scanner = new Scanner(System.in);
-    static List<Show> shows = new ArrayList<>(300);
+    static Show[] shows = new Show[512];
+    static int n = 0;
     static int comparisons = 0;
+    static int k = 10;
 
-    static boolean search(String title) {
-        boolean found = false;
+    static void swap(int indexFirst, int indexSecond) {
+        Show temp = shows[indexFirst];
+        shows[indexFirst] = shows[indexSecond];
+        shows[indexSecond] = temp;
+    }
 
-        int i = 0;
-        while (i < shows.size() && !found) {
-            if (shows.get(i).getTitle().equals(title)) {
-                found = true;
-            }
-            comparisons++;
-
-            i++;
+    static void sort(int k) {
+        if (k < 0) {
+            return;
+        }
+        if (k >= shows.length) {
+            k = n;
         }
 
-        return found;
+        for (int i = 0; i < k; i++) {
+            int smallest = i;
+
+            for (int j = (i + 1); j < n; j++) {
+                comparisons++;
+                if (shows[smallest].getTitle().compareToIgnoreCase(shows[j].getTitle()) > 0) {
+                    smallest = j;
+                }
+            }
+            swap(smallest, i);
+        }
     }
 
     public static void main(String[] args) {
@@ -381,16 +397,19 @@ public class SequentialSearch {
 
         while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
             int index = Integer.parseInt(line.substring(1));
-            shows.add(Show.read(File.readLine(index)));
+            shows[n] = Show.read(File.readLine(index));
+            n++;
         }
 
-        while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
-            System.out.println(search(line) ? "SIM" : "NAO");
+        sort(k);
+
+        for (int i = 0; i < k; i++) {
+            shows[i].print();
         }
 
         long end = System.currentTimeMillis();
 
-        try (FileWriter writer = new FileWriter("matricula_sequencial.txt")) {
+        try (FileWriter writer = new FileWriter("matricula_selecao.txt")) {
             writer.write("123456" + '\t' + (end - start) + '\t' + comparisons);
         } catch (IOException e) {
             //

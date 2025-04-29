@@ -7,7 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Scanner;
 
 class File {
 
@@ -19,7 +22,6 @@ class File {
         if (index > 0) {
             try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
                 int i = 0;
-
                 while (((line = reader.readLine()) != null) && i < index) {
                     i++;
                 }
@@ -353,26 +355,28 @@ class Show {
     }
 }
 
-public class SequentialSearch {
+public class SortingByInsertion {
 
     static Scanner scanner = new Scanner(System.in);
-    static List<Show> shows = new ArrayList<>(300);
+    static Show[] shows = new Show[512];
+    static int n = 0;
     static int comparisons = 0;
 
-    static boolean search(String title) {
-        boolean found = false;
+    static void sort() {
+        for (int i = 1; i < n; i++) {
+            Show temp = shows[i];
+            int j = i - 1;
 
-        int i = 0;
-        while (i < shows.size() && !found) {
-            if (shows.get(i).getTitle().equals(title)) {
-                found = true;
+            while ((j >= 0)
+                    && ((shows[j].type + shows[j].title).compareToIgnoreCase(
+                            temp.type + temp.title
+                    ) > 0)) {
+                comparisons++;
+                shows[j + 1] = shows[j];
+                j--;
             }
-            comparisons++;
-
-            i++;
+            shows[j + 1] = temp;
         }
-
-        return found;
     }
 
     public static void main(String[] args) {
@@ -381,16 +385,19 @@ public class SequentialSearch {
 
         while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
             int index = Integer.parseInt(line.substring(1));
-            shows.add(Show.read(File.readLine(index)));
+            shows[n] = Show.read(File.readLine(index));
+            n++;
         }
 
-        while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
-            System.out.println(search(line) ? "SIM" : "NAO");
+        sort();
+
+        for (int i = 0; i < n; i++) {
+            shows[i].print();
         }
 
         long end = System.currentTimeMillis();
 
-        try (FileWriter writer = new FileWriter("matricula_sequencial.txt")) {
+        try (FileWriter writer = new FileWriter("matricula_insercao.txt")) {
             writer.write("123456" + '\t' + (end - start) + '\t' + comparisons);
         } catch (IOException e) {
             //

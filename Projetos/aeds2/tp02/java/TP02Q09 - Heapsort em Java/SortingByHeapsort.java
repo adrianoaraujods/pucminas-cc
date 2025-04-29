@@ -7,7 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Scanner;
 
 class File {
 
@@ -18,8 +21,8 @@ class File {
 
         if (index > 0) {
             try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
-                int i = 0;
 
+                int i = 0;
                 while (((line = reader.readLine()) != null) && i < index) {
                     i++;
                 }
@@ -261,8 +264,7 @@ class Show {
             endIndex = input.indexOf("\",", startIndex);
 
             show.setTitle(
-                    input.substring(startIndex, endIndex).replace("\"", "")
-            );
+                    input.substring(startIndex, endIndex).replace("\"", ""));
             startIndex = endIndex + 2;
         } else {
             endIndex = input.indexOf(",", startIndex);
@@ -276,8 +278,7 @@ class Show {
             endIndex = input.indexOf("\",", startIndex);
 
             show.setDirector(
-                    input.substring(startIndex, endIndex).replace("\"", "")
-            );
+                    input.substring(startIndex, endIndex).replace("\"", ""));
             startIndex = endIndex + 2;
         } else {
             endIndex = input.indexOf(",", startIndex);
@@ -291,14 +292,12 @@ class Show {
             endIndex = input.indexOf("\",", startIndex);
 
             show.setCast(
-                    input.substring(startIndex, endIndex).replace("\"", "").split(", ")
-            );
+                    input.substring(startIndex, endIndex).replace("\"", "").split(", "));
             startIndex = endIndex + 2;
         } else {
             endIndex = input.indexOf(",", startIndex);
             show.setCast(
-                    input.substring(startIndex, endIndex).replace("\"", "").split(", ")
-            );
+                    input.substring(startIndex, endIndex).replace("\"", "").split(", "));
             startIndex = endIndex + 1;
         }
 
@@ -321,8 +320,7 @@ class Show {
 
         show.setDateAdded(LocalDate.parse(
                 input.substring(startIndex, endIndex),
-                formatter
-        ));
+                formatter));
         startIndex = endIndex + 2;
 
         /* Release Year */
@@ -353,26 +351,85 @@ class Show {
     }
 }
 
-public class SequentialSearch {
+public class SortingByHeapsort {
 
     static Scanner scanner = new Scanner(System.in);
-    static List<Show> shows = new ArrayList<>(300);
+    static Show[] shows = new Show[512];
+    static int n = 0;
     static int comparisons = 0;
 
-    static boolean search(String title) {
-        boolean found = false;
+    static void sort() {
+        Show[] tmp = new Show[n + 1];
+        System.arraycopy(shows, 0, tmp, 1, n);
+        shows = tmp;
 
-        int i = 0;
-        while (i < shows.size() && !found) {
-            if (shows.get(i).getTitle().equals(title)) {
-                found = true;
-            }
-            comparisons++;
-
-            i++;
+        for (int tamHeap = 2; tamHeap <= n; tamHeap++) {
+            buildHeap(tamHeap);
         }
 
-        return found;
+        int tamHeap = n;
+        while (tamHeap > 1) {
+            swap(1, tamHeap--);
+            rebuildHeap(tamHeap);
+        }
+
+        tmp = shows;
+        shows = new Show[n];
+        for (int i = 0; i < n; i++) {
+            shows[i] = tmp[i + 1];
+        }
+    }
+
+    static void buildHeap(int tamHeap) {
+        int i = tamHeap, test;
+
+        while (i > 1
+                && ((test = shows[i].getDirector().orElse("NaN").compareToIgnoreCase(
+                        shows[i / 2].getDirector().orElse("NaN"))) > 0
+                || (test == 0 && (shows[i].getTitle().compareToIgnoreCase(
+                        shows[i / 2].getTitle()) > 0)))) {
+            comparisons++;
+            swap(i, i /= 2);
+        }
+    }
+
+    static void rebuildHeap(int tamHeap) {
+        int i = 1;
+
+        while (i <= (tamHeap / 2)) {
+            int child = getLargestChild(i, tamHeap), test;
+            comparisons++;
+
+            if ((test = shows[i].getDirector().orElse("NaN").compareToIgnoreCase(
+                    shows[child].getDirector().orElse("NaN"))) < 0
+                    || (test == 0 && (shows[i].getTitle().compareToIgnoreCase(
+                            shows[child].getTitle()) < 0))) {
+                swap(i, child);
+                i = child;
+            } else {
+                i = tamHeap;
+            }
+        }
+    }
+
+    static int getLargestChild(int i, int tamHeap) {
+        int child;
+        comparisons++;
+
+        if (2 * i == tamHeap
+                || (shows[2 * i].getDirector().orElse("NaN") + shows[2 * i].getTitle()).compareToIgnoreCase(
+                        shows[2 * i + 1].getDirector().orElse("NaN") + shows[2 * i + 1].getTitle()) > 0) {
+            child = 2 * i;
+        } else {
+            child = 2 * i + 1;
+        }
+        return child;
+    }
+
+    static void swap(int indexFirst, int indexSecond) {
+        Show temp = shows[indexFirst];
+        shows[indexFirst] = shows[indexSecond];
+        shows[indexSecond] = temp;
     }
 
     public static void main(String[] args) {
@@ -381,16 +438,19 @@ public class SequentialSearch {
 
         while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
             int index = Integer.parseInt(line.substring(1));
-            shows.add(Show.read(File.readLine(index)));
+            shows[n] = Show.read(File.readLine(index));
+            n++;
         }
 
-        while ((line = scanner.nextLine()).compareTo("FIM") != 0) {
-            System.out.println(search(line) ? "SIM" : "NAO");
+        sort();
+
+        for (int i = 0; i < n; i++) {
+            shows[i].print();
         }
 
         long end = System.currentTimeMillis();
 
-        try (FileWriter writer = new FileWriter("matricula_sequencial.txt")) {
+        try (FileWriter writer = new FileWriter("matricula_heapsort.txt")) {
             writer.write("123456" + '\t' + (end - start) + '\t' + comparisons);
         } catch (IOException e) {
             //
