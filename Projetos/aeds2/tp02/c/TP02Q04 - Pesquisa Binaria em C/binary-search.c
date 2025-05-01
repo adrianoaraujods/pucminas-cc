@@ -8,11 +8,11 @@
 #define MAX_STRING_LENGTH 1024
 #define MAX_MATRIX 16
 #define PATH "/tmp/disneyplus.csv"
-#define MATRICULA 000000
+#define MATRICULA 123456
 
-char *trim(char *string) {
+char* trim(char* string) {
   if (!string) return NULL;
-  int startIndex = 0, endIndex = (int) strlen(string) - 1;
+  int startIndex = 0, endIndex = (int)strlen(string) - 1;
 
   while (startIndex <= endIndex && isspace(string[startIndex])) startIndex++;
   while (endIndex >= startIndex && isspace(string[endIndex])) endIndex--;
@@ -24,7 +24,7 @@ char *trim(char *string) {
   return string;
 }
 
-char *removeQuotes(char *string) {
+char* removeQuotes(char* string) {
   if (!string) return 0;
 
   const int length = strlen(string);
@@ -39,12 +39,12 @@ char *removeQuotes(char *string) {
   return string;
 }
 
-char *substring(const char *string, const size_t startIndex, const size_t endIndex) {
+char* substring(const char* string, const size_t startIndex, const size_t endIndex) {
   if (!string || startIndex > endIndex || endIndex > strlen(string)) return NULL;
 
   int length = endIndex - startIndex + 1;
 
-  char *substring = malloc(length + 1);
+  char* substring = malloc(length + 1);
   if (!substring) return NULL;
 
   memcpy(substring, string + startIndex, length);
@@ -53,8 +53,8 @@ char *substring(const char *string, const size_t startIndex, const size_t endInd
   return removeQuotes(substring);
 }
 
-char *readLine() {
-  char *line = malloc(MAX_STRING_LENGTH);
+char* readLine() {
+  char* line = malloc(MAX_STRING_LENGTH);
   if (!line) return NULL;
 
   if (!fgets(line, MAX_STRING_LENGTH, stdin)) {
@@ -65,13 +65,13 @@ char *readLine() {
   return trim(line);;
 }
 
-char *fileLine(const int index) {
+char* fileLine(const int index) {
   if (index <= 0) return NULL;
 
-  FILE *file = fopen(PATH, "r");
+  FILE* file = fopen(PATH, "r");
   if (!file) return NULL;
 
-  char *line = malloc(MAX_STRING_LENGTH);
+  char* line = malloc(MAX_STRING_LENGTH);
   if (!line) return NULL;
 
   int i = 0;
@@ -91,7 +91,7 @@ char *fileLine(const int index) {
   return NULL;
 }
 
-char *extractField(const char *input, int *index) {
+char* extractField(const char* input, int* index) {
   if (!input || !index || *index >= strlen(input)) return NULL;
 
   int startIndex = *index, endIndex = *index;
@@ -103,8 +103,8 @@ char *extractField(const char *input, int *index) {
     while (
       endIndex < length &&
       !(input[endIndex] == '"' &&
-      (input[endIndex + 1] == ',' || input[endIndex + 1] == '\0'))
-    ) endIndex++;
+        (input[endIndex + 1] == ',' || input[endIndex + 1] == '\0'))
+      ) endIndex++;
 
     *index = endIndex + 2;
   } else {
@@ -118,32 +118,32 @@ char *extractField(const char *input, int *index) {
   return substring(input, startIndex, endIndex - 1);
 }
 
-int compareStrings(const void *a, const void *b) {
-  const char **strA = (const char **)a;
-  const char **strB = (const char **)b;
+int compareStrings(const void* a, const void* b) {
+  const char** strA = (const char**)a;
+  const char** strB = (const char**)b;
   return strcmp(*strA, *strB);
 }
 
 typedef struct {
-  char *show_id;
-  char *type;
-  char *title;
-  char *director; // nullable
+  char* show_id;
+  char* type;
+  char* title;
+  char* director; // nullable
 
-  char **cast;
+  char** cast;
   int cast_size;
 
-  char *country; // nullable
-  char *date_added; // nullable
+  char* country; // nullable
+  char* date_added; // nullable
   int release_year;
-  char *rating; // nullable
-  char *duration;
+  char* rating; // nullable
+  char* duration;
 
-  char **listed_in;
+  char** listed_in;
   int listed_in_size;
 } Show;
 
-void printShow(Show *show) {
+void printShow(Show* show) {
   if (!show) return;
 
   printf("=> %s", show->show_id);
@@ -184,7 +184,7 @@ void printShow(Show *show) {
   printf("] ##\n");
 }
 
-void freeShow(Show *show) {
+void freeShow(Show* show) {
   if (!show) return;
 
   if (show->show_id) free(show->show_id);
@@ -210,18 +210,18 @@ void freeShow(Show *show) {
   free(show);
 }
 
-Show *parseCast(Show *show, char *cast) {
+Show* parseCast(Show* show, char* cast) {
   int nextNameIndex = 0;
 
-  char *tempNames[MAX_MATRIX];
-  char *name;
+  char* tempNames[MAX_MATRIX];
+  char* name;
 
   show->cast_size = 0;
   while ((name = extractField(cast, &nextNameIndex)) != NULL) {
     tempNames[show->cast_size++] = name;
   }
 
-  show->cast = malloc(show->cast_size * sizeof(char *));
+  show->cast = malloc(show->cast_size * sizeof(char*));
   for (int i = 0; i < show->cast_size; i++) {
     name = tempNames[i];
 
@@ -229,25 +229,25 @@ Show *parseCast(Show *show, char *cast) {
     strcpy(show->cast[i], name);
   }
 
-  qsort(show->cast, show->cast_size, sizeof(char *), compareStrings);
+  qsort(show->cast, show->cast_size, sizeof(char*), compareStrings);
 
   free(cast);
 
   return show;
 }
 
-Show *parseListedIn(Show *show, char *listedIn) {
+Show* parseListedIn(Show* show, char* listedIn) {
   int nextNameIndex = 0;
 
-  char *tempCategories[MAX_MATRIX];
-  char *category;
+  char* tempCategories[MAX_MATRIX];
+  char* category;
 
   show->listed_in_size = 0;
   while ((category = extractField(listedIn, &nextNameIndex)) != NULL) {
     tempCategories[show->listed_in_size++] = category;
   }
 
-  show->listed_in = malloc(show->listed_in_size * sizeof(char *));
+  show->listed_in = malloc(show->listed_in_size * sizeof(char*));
   for (int i = 0; i < show->listed_in_size; i++) {
     category = trim(tempCategories[i]);
 
@@ -261,7 +261,7 @@ Show *parseListedIn(Show *show, char *listedIn) {
 
 }
 
-Show* parseShow(const char *input) {
+Show* parseShow(const char* input) {
   if (!input || strlen(input) == 0) return NULL;
 
   Show* show = malloc(sizeof(Show));
@@ -279,7 +279,7 @@ Show* parseShow(const char *input) {
   show->country = extractField(input, &nextFieldStart);
   show->date_added = extractField(input, &nextFieldStart);
 
-  char *year = extractField(input, &nextFieldStart);
+  char* year = extractField(input, &nextFieldStart);
   show->release_year = atoi(year);
   free(year);
 
@@ -291,9 +291,9 @@ Show* parseShow(const char *input) {
   return show;
 }
 
-void sortShows(Show *shows[], int left, int right) {
+void sortShows(Show* shows[], int left, int right) {
   int i = left, j = right;
-  const char* pivot = shows[(right+left)/2]->title;
+  const char* pivot = shows[(right + left) / 2]->title;
 
   while (i <= j) {
     while (strcmp(shows[i]->title, pivot) < 0) i++;
@@ -301,7 +301,7 @@ void sortShows(Show *shows[], int left, int right) {
 
     if (i <= j) {
 
-      Show *temp = shows[i];
+      Show* temp = shows[i];
       shows[i] = shows[j];
       shows[j] = temp;
 
@@ -315,7 +315,7 @@ void sortShows(Show *shows[], int left, int right) {
 
 int comparisons = 0;
 
-bool binarySearch(Show **shows, int count, char *title) {
+bool binarySearch(Show** shows, int count, char* title) {
   bool found = false;
 
   int left = 0, right = count - 1, pivot;
@@ -346,7 +346,7 @@ long long now() {
 }
 
 int main() {
-  Show *shows[360];
+  Show* shows[360];
   int count = 0;
   char* line;
 
@@ -375,7 +375,7 @@ int main() {
 
   const long long end = now();
 
-  FILE *file = fopen("matrícula_binaria.txt", "w");
+  FILE* file = fopen("matricula_binaria.txt", "w");
   fprintf(file, "%d\t%ld\t%d", MATRICULA, end - start, comparisons);
 
   return 0;

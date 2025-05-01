@@ -2,10 +2,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
+#include <stdbool.h>
+#include <sys/time.h>
+#include <time.h>
 
 #define MAX_STRING_LENGTH 1024
 #define MAX_MATRIX 16
 #define PATH "/tmp/disneyplus.csv"
+#define MATRICULA 123456
+#define K 10
+
+const char* MONTH_NAMES[] = {
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+};
 
 char* trim(char* string) {
   if (!string) return NULL;
@@ -122,6 +143,31 @@ int compareStrings(const void* a, const void* b) {
 }
 
 typedef struct {
+  int year;
+  int month;
+  int day;
+} Date;
+
+int dateToInt(Date* date) {
+  char string[9];
+
+  snprintf(string, 9, "%04d%02d%02d", date->year, date->month, date->day);
+
+  return atoi(string);
+}
+
+char* formatedDate(Date* date) {
+  if (date->month < 1 || date->month > 12) return NULL;
+
+  char* string = malloc(sizeof(char) * 20);
+  if (string == NULL) return NULL;
+
+  snprintf(string, 20, "%s %d, %04d", MONTH_NAMES[date->month - 1], date->day, date->year);
+
+  return string;
+}
+
+typedef struct {
   char* show_id;
   char* type;
   char* title;
@@ -131,7 +177,7 @@ typedef struct {
   int cast_size;
 
   char* country; // nullable
-  char* date_added; // nullable
+  Date* date_added; // nullable
   int release_year;
   char* rating; // nullable
   char* duration;
@@ -144,8 +190,8 @@ void printShow(Show* show) {
   if (!show) return;
 
   printf("=> %s", show->show_id);
-  printf(" ## %s", show->type);
   printf(" ## %s", show->title);
+  printf(" ## %s", show->type);
   printf(" ## %s", show->director ? show->director : "NaN");
 
   /* Cast */
@@ -162,7 +208,7 @@ void printShow(Show* show) {
   printf("]");
 
   printf(" ## %s", show->country ? show->country : "NaN");
-  printf(" ## %s", show->date_added ? show->date_added : "NaN");
+  printf(" ## %s", show->date_added ? formatedDate(show->date_added) : "NaN");
   printf(" ## %d", show->release_year);
   printf(" ## %s", show->rating ? show->rating : "NaN");
   printf(" ## %s", show->duration);
@@ -258,6 +304,34 @@ Show* parseListedIn(Show* show, char* listedIn) {
 
 }
 
+Show* parseDateAdded(Show* show, char* dateAdded) {
+  show->date_added = malloc(sizeof(Date));
+
+  int end = 0;
+
+  while (dateAdded[end + 1] != ' ') end++;
+
+  char* monthString = substring(dateAdded, 0, end);
+  show->date_added->month = 0;
+
+  for (int i = 0; i < 12; i++) {
+    if (strcmp(monthString, MONTH_NAMES[i]) == 0) {
+      show->date_added->month = i + 1;
+      i = 12;
+    }
+  }
+
+  int start = end += 2;
+  while (dateAdded[end + 1] != ',') end++;
+  show->date_added->day = atoi(substring(dateAdded, start, end));
+
+  start = end += 2;
+  while (dateAdded[end + 1] != '\0') end++;
+  show->date_added->year = atoi(substring(dateAdded, start, end));
+
+  return show;
+}
+
 Show* parseShow(const char* input) {
   if (!input || strlen(input) == 0) return NULL;
 
@@ -274,7 +348,8 @@ Show* parseShow(const char* input) {
   parseCast(show, extractField(input, &nextFieldStart));
 
   show->country = extractField(input, &nextFieldStart);
-  show->date_added = extractField(input, &nextFieldStart);
+
+  parseDateAdded(show, extractField(input, &nextFieldStart));
 
   char* year = extractField(input, &nextFieldStart);
   show->release_year = atoi(year);
@@ -288,23 +363,140 @@ Show* parseShow(const char* input) {
   return show;
 }
 
+int comparisons = 0;
+
+void swap(Show* i, Show* j) {
+  Show temp = *i;
+  *i = *j;
+  *j = temp;
+}
+
+int getLargestChild(Show* shows[], int i, int heapSize) {
+  int child;
+  comparisons++;
+
+  if ((2 * i + 1) > heapSize) return 2 * i;
+
+  if (2 * i == heapSize ||
+    (strcasecmp(
+      (shows[2 * i]->director ? shows[2 * i]->director : "NaN"),
+      (shows[2 * i + 1]->director ? shows[2 * i + 1]->director : "NaN")
+    ) > 0)) {
+    child = 2 * i;
+  } else {
+    child = 2 * i + 1;
+  }
+
+  return child;
+}
+
+void rebuildHeap(Show* shows[], int heapSize) {
+  int i = 1;
+
+  while (i <= (heapSize / 2)) {
+    int child = getLargestChild(shows, i, heapSize);
+    comparisons++;
+
+    if (strcasecmp(
+      (shows[i]->director ? shows[i]->director : "NaN"),
+      (shows[child]->director ? shows[child]->director : "NaN")
+    ) < 0) {
+      swap(shows[i], shows[child]);
+      i = child;
+    } else {
+      i = heapSize;
+    }
+  }
+}
+
+void buildHeap(Show* shows[], int heapSize) {
+  for (
+    int i = heapSize;
+    i > 1 && (strcasecmp(
+      (shows[i]->director ? shows[i]->director : "NaN"),
+      (shows[i / 2]->director ? shows[i / 2]->director : "NaN")
+    ) > 0);
+    i /= 2
+    ) {
+    comparisons++;
+    swap(shows[i], shows[i / 2]);
+  }
+}
+
+void sort(Show* shows[], int n, int k) {
+  Show* temp[n + 1];
+
+  for (int i = 0; i < n; i++) temp[i + 1] = shows[i];
+
+  for (int heapSize = 2; heapSize <= n; heapSize++) buildHeap(temp, heapSize);
+
+  int heapSize = n;
+  while (heapSize > 1) {
+    swap(temp[1], temp[heapSize--]);
+    rebuildHeap(temp, heapSize);
+  }
+
+  for (int i = 0; i < n; i++) shows[i] = temp[i + 1];
+}
+
+void untie(Show* shows[], int n, int k) {
+  for (int i = 1; i < n; i++) {
+    Show* temp = shows[i];
+    int j = i - 1;
+
+    while ((j >= 0) &&
+      (strcasecmp(
+        (shows[j]->director ? shows[j]->director : "NaN"),
+        (temp->director ? temp->director : "NaN")
+      ) == 0) &&
+      (strcasecmp(shows[j]->title, temp->title) > 0)) {
+      comparisons++;
+
+      shows[j + 1] = shows[j];
+      j--;
+    }
+
+    shows[j + 1] = temp;
+  }
+}
+
+long long now() {
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  return (long long)(tv.tv_sec) * 1000 + (tv.tv_usec) / 1000;
+}
+
 int main() {
+  Show* shows[512];
+  int count = 0;
   char* line;
+
+  const long long start = now();
 
   while (strcmp("FIM", line = readLine()) != 0) {
     char* input = fileLine(atoi(line + 1));
 
     if (input) {
       Show* show = parseShow(input);
-      printShow(show);
+      shows[count++] = show;
 
-      freeShow(show);
       free(input);
     }
 
     free(line);
   }
 
-  free(line);
+  sort(shows, count, K);
+  untie(shows, count, K);
+
+  for (int i = 0; i < K; i++) {
+    printShow(shows[i]);
+  }
+
+  const long long end = now();
+
+  FILE* file = fopen("matricula_heapsortParcial.txt", "w");
+  fprintf(file, "%d\t%lld\t%d", MATRICULA, end - start, comparisons);
+
   return 0;
 }

@@ -2,10 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
+#include <stdbool.h>
+#include <sys/time.h>
 
 #define MAX_STRING_LENGTH 1024
 #define MAX_MATRIX 16
 #define PATH "/tmp/disneyplus.csv"
+#define MATRICULA 123456
 
 char* trim(char* string) {
   if (!string) return NULL;
@@ -144,8 +148,8 @@ void printShow(Show* show) {
   if (!show) return;
 
   printf("=> %s", show->show_id);
-  printf(" ## %s", show->type);
   printf(" ## %s", show->title);
+  printf(" ## %s", show->type);
   printf(" ## %s", show->director ? show->director : "NaN");
 
   /* Cast */
@@ -288,23 +292,91 @@ Show* parseShow(const char* input) {
   return show;
 }
 
+int comparisons = 0;
+
+void insertion(Show* shows[], int n, int cor, int h) {
+  for (int i = (h + cor); i < n; i += h) {
+    Show* temp = shows[i];
+    int j = i - h;
+    while ((j >= 0) && (strcasecmp(shows[j]->type, temp->type) > 0)) {
+      comparisons++;
+
+      shows[j + h] = shows[j];
+      j -= h;
+    }
+    shows[j + h] = temp;
+  }
+}
+
+void sort(Show* shows[], int n) {
+  int h = 1;
+
+  do { h = (h * 3) + 1; } while (h < n);
+
+  do {
+    h /= 3;
+    for (int cor = 0; cor < h; cor++) {
+      insertion(shows, n, cor, h);
+    }
+  } while (h != 1);
+}
+
+void untie(Show* shows[], int n) {
+  for (int i = 1; i < n; i++) {
+    Show* tmp = shows[i];
+    int j = i - 1;
+
+    while ((j >= 0) && (
+      strcasecmp(shows[j]->type, tmp->type) == 0 &&
+      strcasecmp(shows[j]->title, tmp->title) > 0
+      )) {
+      comparisons++;
+
+      shows[j + 1] = shows[j];
+      j--;
+    }
+
+    shows[j + 1] = tmp;
+  }
+}
+
+long long now() {
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  return (long long)(tv.tv_sec) * 1000 + (tv.tv_usec) / 1000;
+}
+
 int main() {
+  Show* shows[512];
+  int count = 0;
   char* line;
+
+  const long long start = now();
 
   while (strcmp("FIM", line = readLine()) != 0) {
     char* input = fileLine(atoi(line + 1));
 
     if (input) {
       Show* show = parseShow(input);
-      printShow(show);
+      shows[count++] = show;
 
-      freeShow(show);
       free(input);
     }
 
     free(line);
   }
 
-  free(line);
+  sort(shows, count);
+  untie(shows, count);
+
+  for (int i = 0; i < count; i++) {
+    printShow(shows[i]);
+  }
+
+  const long long end = now();
+
+  FILE* file = fopen("matricula_shellsort.txt", "w");
+  fprintf(file, "%d\t%lld\t%d", MATRICULA, end - start, comparisons);
+
   return 0;
 }
