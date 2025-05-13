@@ -1,0 +1,439 @@
+{
+  "users": [
+    {
+      "name": "admin",
+      "email": "admin@admin.com",
+      "password": "123",
+      "createdAt": 1732369542888,
+      "updatedAt": 1732369542888,
+      "id": 1
+    }
+  ],
+  "categories": [
+    {
+      "ownerId": 1,
+      "label": "Salário",
+      "type": "income",
+      "icon": "briefcase",
+      "createdAt": 1732378821848,
+      "updatedAt": 1732378821848,
+      "id": 1
+    },
+    {
+      "ownerId": 1,
+      "label": "Alugel",
+      "type": "expense",
+      "icon": "landmark",
+      "createdAt": 1732379109551,
+      "updatedAt": 1732379109551,
+      "id": 2
+    }
+  ],
+  "entries": [
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 1",
+      "type": "income",
+      "value": 3000,
+      "date": 1729987200000,
+      "createdAt": 1732378962500,
+      "updatedAt": 1732378962500,
+      "id": 1
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 1",
+      "type": "income",
+      "value": 3000,
+      "date": 1727395200000,
+      "createdAt": 1732378962531,
+      "updatedAt": 1732378962531,
+      "id": 2
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 1",
+      "type": "income",
+      "value": 3000,
+      "date": 1724803200000,
+      "createdAt": 1732378962562,
+      "updatedAt": 1732378962562,
+      "id": 3
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 1",
+      "type": "income",
+      "value": 3000,
+      "date": 1722211200000,
+      "createdAt": 1732378962592,
+      "updatedAt": 1732378962592,
+      "id": 4
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 1",
+      "type": "income",
+      "value": 3000,
+      "date": 1719619200000,
+      "createdAt": 1732378962607,
+      "updatedAt": 1732378962607,
+      "id": 5
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 1",
+      "type": "income",
+      "value": 3000,
+      "date": 1717027200000,
+      "createdAt": 1732378962638,
+      "updatedAt": 1732378962638,
+      "id": 6
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 1",
+      "type": "income",
+      "value": 3000,
+      "date": 1714435200000,
+      "createdAt": 1732378962670,
+      "updatedAt": 1732378962670,
+      "id": 7
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 1",
+      "type": "income",
+      "value": 3000,
+      "date": 1711843200000,
+      "createdAt": 1732378962700,
+      "updatedAt": 1732378962700,
+      "id": 8
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 1",
+      "type": "income",
+      "value": 3000,
+      "date": 1709251200000,
+      "createdAt": 1732378962731,
+      "updatedAt": 1732378962731,
+      "id": 9
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 1",
+      "type": "income",
+      "value": 3000,
+      "date": 1706659200000,
+      "createdAt": 1732378962763,
+      "updatedAt": 1732378962763,
+      "id": 10
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 1",
+      "type": "income",
+      "value": 3000,
+      "date": 1704067200000,
+      "createdAt": 1732378962795,
+      "updatedAt": 1732378962795,
+      "id": 11
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 2",
+      "type": "income",
+      "value": 2000,
+      "date": 1731196800000,
+      "createdAt": 1732379010496,
+      "updatedAt": 1732379010496,
+      "id": 12
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 2",
+      "type": "income",
+      "value": 2000,
+      "date": 1728604800000,
+      "createdAt": 1732379010513,
+      "updatedAt": 1732379010513,
+      "id": 13
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 2",
+      "type": "income",
+      "value": 2000,
+      "date": 1726012800000,
+      "createdAt": 1732379010543,
+      "updatedAt": 1732379010543,
+      "id": 14
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 2",
+      "type": "income",
+      "value": 2000,
+      "date": 1723420800000,
+      "createdAt": 1732379010574,
+      "updatedAt": 1732379010574,
+      "id": 15
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 2",
+      "type": "income",
+      "value": 2000,
+      "date": 1720828800000,
+      "createdAt": 1732379010605,
+      "updatedAt": 1732379010605,
+      "id": 16
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 2",
+      "type": "income",
+      "value": 2000,
+      "date": 1718236800000,
+      "createdAt": 1732379010636,
+      "updatedAt": 1732379010636,
+      "id": 17
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 2",
+      "type": "income",
+      "value": 2000,
+      "date": 1715644800000,
+      "createdAt": 1732379010668,
+      "updatedAt": 1732379010668,
+      "id": 18
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 2",
+      "type": "income",
+      "value": 2000,
+      "date": 1713052800000,
+      "createdAt": 1732379010699,
+      "updatedAt": 1732379010699,
+      "id": 19
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 2",
+      "type": "income",
+      "value": 2000,
+      "date": 1710460800000,
+      "createdAt": 1732379010730,
+      "updatedAt": 1732379010730,
+      "id": 20
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 2",
+      "type": "income",
+      "value": 2000,
+      "date": 1707868800000,
+      "createdAt": 1732379010761,
+      "updatedAt": 1732379010761,
+      "id": 21
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 2",
+      "type": "income",
+      "value": 2000,
+      "date": 1705276800000,
+      "createdAt": 1732379010792,
+      "updatedAt": 1732379010792,
+      "id": 22
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 2,
+      "label": "Alugel",
+      "type": "expense",
+      "value": 1500,
+      "date": 1731628800000,
+      "createdAt": 1732379157196,
+      "updatedAt": 1732379157196,
+      "id": 23
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 2,
+      "label": "Alugel",
+      "type": "expense",
+      "value": 1500,
+      "date": 1729036800000,
+      "createdAt": 1732379157212,
+      "updatedAt": 1732379157212,
+      "id": 24
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 2,
+      "label": "Alugel",
+      "type": "expense",
+      "value": 1500,
+      "date": 1726444800000,
+      "createdAt": 1732379157243,
+      "updatedAt": 1732379157243,
+      "id": 25
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 2,
+      "label": "Alugel",
+      "type": "expense",
+      "value": 1500,
+      "date": 1723852800000,
+      "createdAt": 1732379157273,
+      "updatedAt": 1732379157273,
+      "id": 26
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 2,
+      "label": "Alugel",
+      "type": "expense",
+      "value": 1500,
+      "date": 1721260800000,
+      "createdAt": 1732379157304,
+      "updatedAt": 1732379157304,
+      "id": 27
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 2,
+      "label": "Alugel",
+      "type": "expense",
+      "value": 1500,
+      "date": 1718668800000,
+      "createdAt": 1732379157335,
+      "updatedAt": 1732379157335,
+      "id": 28
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 2,
+      "label": "Alugel",
+      "type": "expense",
+      "value": 1500,
+      "date": 1716076800000,
+      "createdAt": 1732379157366,
+      "updatedAt": 1732379157366,
+      "id": 29
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 2,
+      "label": "Alugel",
+      "type": "expense",
+      "value": 1500,
+      "date": 1713484800000,
+      "createdAt": 1732379157398,
+      "updatedAt": 1732379157398,
+      "id": 30
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 2,
+      "label": "Alugel",
+      "type": "expense",
+      "value": 1500,
+      "date": 1710892800000,
+      "createdAt": 1732379157428,
+      "updatedAt": 1732379157428,
+      "id": 31
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 2,
+      "label": "Alugel",
+      "type": "expense",
+      "value": 1500,
+      "date": 1708300800000,
+      "createdAt": 1732379157460,
+      "updatedAt": 1732379157460,
+      "id": 32
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 2,
+      "label": "Alugel",
+      "type": "expense",
+      "value": 1500,
+      "date": 1705708800000,
+      "createdAt": 1732379157490,
+      "updatedAt": 1732379157490,
+      "id": 33
+    }
+  ],
+  "goals": [],
+  "recurring": [
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 1",
+      "type": "income",
+      "frequency": 30,
+      "initialDate": 1704067200000,
+      "finalDate": 1735603200000,
+      "value": 3000,
+      "updatedAt": 1732378962402,
+      "createdAt": 1732378962402,
+      "id": 1
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 1,
+      "label": "Salário, Parcela 2",
+      "type": "income",
+      "frequency": 30,
+      "initialDate": 1705276800000,
+      "finalDate": 1735603200000,
+      "value": 2000,
+      "updatedAt": 1732379010416,
+      "createdAt": 1732379010416,
+      "id": 2
+    },
+    {
+      "ownerId": 1,
+      "categoryId": 2,
+      "label": "Alugel",
+      "type": "expense",
+      "frequency": 30,
+      "initialDate": 1705708800000,
+      "finalDate": 1735603200000,
+      "value": 1500,
+      "updatedAt": 1732379157144,
+      "createdAt": 1732379157144,
+      "id": 3
+    }
+  ]
+}

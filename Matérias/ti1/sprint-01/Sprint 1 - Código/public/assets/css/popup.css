@@ -1,0 +1,78 @@
+.popup {
+  background-color: var(--card);
+  color: var(--foreground);
+  border-width: 1px;
+  width: 100%;
+  max-width: 680px;
+  border-radius: 1rem;
+  padding: 1rem 2rem;
+}
+
+.popup__header {
+  text-align: center;
+}
+
+.popup__content {
+  display: grid;
+  margin-block: 1rem;
+  gap: 1rem;
+}
+
+.popup__content__empty {
+  display: none;
+}
+
+.popup__content__list:empty~.popup__content__empty {
+  display: block;
+}
+
+.popup__content__list {
+  display: grid;
+  gap: 1rem;
+}
+
+.popup__content__list__item {
+  width: 100%;
+  padding: .5rem;
+  border-radius: .5rem;
+  display: grid;
+  gap: .5rem;
+  align-items: center;
+  grid-template-columns: 32px 1fr 32px 32px;
+}
+
+.popup__content__list__item--success {
+  background-color: var(--background-success);
+}
+
+.popup__content__list__item--destructive {
+  background-color: var(--background-destructive);
+}
+
+.popup__content__list__item__icon,
+.popup__content__list__item__edit,
+.popup__content__list__item__delete {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.open-popup {
+  background-color: var(--foreground);
+  color: var(--background);
+  padding: .5rem 1rem;
+}
+
+.close-popup--icon {
+  top: 1rem;
+  right: 1rem;
+  position: absolute;
+  background-color: transparent;
+}
+
+.close-popup>svg {
+  color: var(--foreground);
+}

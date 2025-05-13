@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metas</title>
+    <link rel="stylesheet" href="metas.css">
+    <script src="metas.js" defer></script>
+    <style>
+      
+        .menu-btn, .add-btn {
+            background: none; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 2em; 
+            color: white; 
+            padding: 10px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        
+        .menu-btn:hover, .add-btn:hover {
+            opacity: 0.8; /* Efeito de hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>LOGO</h1>
+            <button class="menu-btn">
+                <span>☰</span> <!-- Ícone de menu -->
+            </button>
+        </header>
+        <div class="tab-menu">
+            <button class="tab-button">Evolução</button>
+            <button class="tab-button active">Metas</button>
+        </div>
+        <div class="content">
+            <div class="metas-header">
+                <h2>Metas</h2>
+                <button class="add-btn">
+                    <span>+</span> <!-- Ícone de adicionar -->
+                </button>
+            </div>
+            <div class="meta-item">
+                <a href="padaria.html" class="meta-link">
+                    <span class="meta-icon">🍞</span>
+                    <div class="meta-text" id="meta-1">
+                        <p>Padaria</p>
+                    </div>
+                </a>
+            </div>
+            <div class="meta-item">
+                <a href="transporte.html" class="meta-link">
+                    <span class="meta-icon">🚌</span>
+                    <div class="meta-text" id="meta-2">
+                        <p>Transporte</p>
+                    </div>
+                </a>
+            </div>
+            <div class="meta-item">
+                <a href="servicos.html" class="meta-link">
+                    <span class="meta-icon">🤖</span>
+                    <div class="meta-text" id="meta-3">
+                        <p>Serviços</p>
+                    </div>
+                </a>
+            </div>
+            <div class="meta-item">
+                <a href="compras.html" class="meta-link">
+                    <span class="meta-icon">🛒</span>
+                    <div class="meta-text" id="meta-4">
+                        <p>Compras</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

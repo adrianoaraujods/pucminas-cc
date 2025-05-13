@@ -1,0 +1,150 @@
+/* Main Content */
+main {
+  margin-top: 4rem;
+  max-width: 1280px;
+  padding-inline: 1rem;
+  margin-inline: auto;
+  display: grid;
+  gap: 2rem;
+}
+
+/* Cards */
+.card {
+  background-color: var(--card);
+  color: var(--foreground);
+  border: 1px solid currentColor;
+  width: 100%;
+  max-width: 1280px;
+  border-radius: 1rem;
+  padding: 2rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.card-body {
+  padding: 2rem !important;
+}
+
+.economia-total {
+  width: 100%;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  border-radius: 1rem;
+  margin: 1rem 0;
+}
+
+/* Gráficos */
+.card canvas {
+  width: 100% !important;
+  max-height: 300px !important;
+  margin: 1rem auto;
+}
+
+#graficoGastos {
+  width: 100% !important;
+  max-width: 500px !important;
+  height: auto !important;
+  min-height: 300px;
+  margin: 0 auto;
+  display: block;
+}
+
+.container-fluid .row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Media Queries */
+@media (max-width: 1024px) {
+  .card-body {
+    padding: 1.5rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .economia-total {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .card-body {
+    padding: 1rem !important;
+  }
+
+  #graficoGastos {
+    min-height: 250px;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  #graficoMensal {
+    display: none !important;
+  }
+
+  canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+
+@media (max-width: 620px) {
+  main {
+    padding: 0 1rem;
+  }
+
+  .card {
+    margin: 1rem 0;
+  }
+
+  #graficoGastos {
+    min-height: 200px;
+    width: 100% !important;
+  }
+
+  #graficoMensal {
+    display: none !important;
+  }
+
+  .card canvas {
+    max-height: 250px;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.desativado {
+  display: none !important;
+}
+
+main .botoes {
+  background-color: rgb(24, 24, 24);
+  border-radius: 10px;
+  color: white;
+}
+
+main .botoes button {
+  color: #f8f8f8;
+}
+
+main .botoes .selecionado {
+  background-color: #f8f8f8;
+  color: #000;
+}
+
+.economia-total {
+  width: 100%;
+  font-size: 1.5rem;
+  border-radius: 10px;
+}
+
+main .card canvas {
+  width: 300px;
+  /* ou qualquer tamanho que desejar */
+  height: 150px;
+  /* ajuste conforme necessário */
+}
+
+main .card .desativado {
+  display: none;
+}

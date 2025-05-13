@@ -1,6 +1,9 @@
 # Diw
 /Matérias/diw/*
 
+# Files
+*.pptx
+
 # Java
 /**/.idea/**/*
 /**/out/**/*
