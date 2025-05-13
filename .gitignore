@@ -1,15 +1,3 @@
-*
-!*/
-
-!.gitignore
-
-# Projetos
-!/Projetos/aeds2/**/*
-
-# Arquivos
-*.res.out
-*.temp
-
 # Java
 /**/.idea/**/*
 /**/out/**/*
