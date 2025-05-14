@@ -3,6 +3,9 @@
 
 # Files
 *.pptx
+*.mlt
+*.mp4
+*.zip
 
 # Java
 /**/.idea/**/*
